@@ -1,0 +1,4 @@
+{
+  "python.pythonPath": "/Users/scottdomes/Documents/ml/tensorflow1/venv/bin/python3.9",
+  "python.formatting.provider": "black"
+}
