@@ -78,7 +78,9 @@ train_dataset.describe().transpose()[['mean', 'std']]
 # it creates an array of arrays. There are 314 arrays, and each is 9 items long
 # A 2D tensor is AKA a matrix, btw
 # If we limit it to just the first five rows...
-print(np.array(train_dataset[:5]))
+
+# print(np.array(train_dataset[:5]))
+
 # ... it looks like so:
 # [[   4.    90.    75.  2125.    14.5   74.     0.     0.     1. ]
 #  [   4.   140.    88.  2890.    17.3   79.     0.     0.     1. ]
@@ -124,7 +126,9 @@ tensor = normalizer(train_features)
 #  [   4.    97.    67.  2145.    18.    80.     0.     1.     0. ]]
 
 # Well, check out the normalized version...
-print(tensor[:5])
+
+# print(tensor[:5])
+
 # [[-0.871 -1.011 -0.785 -1.027 -0.38  -0.517 -0.466 -0.496  0.776]
 #  [-0.871 -0.531 -0.444 -0.119  0.625  0.845 -0.466 -0.496  0.776]
 #  [ 1.486  1.485  1.449  1.74  -0.739 -1.062 -0.466 -0.496  0.776]
@@ -142,8 +146,10 @@ print(tensor[:5])
 # Weight        2990.251592  843.898596
 # What's the new standard deviation? Well, let's see
 # These commands produce the STD and mean for each column
-print(tf.math.reduce_mean(tensor, 0))
-print(tf.math.reduce_std(tensor, 0))
+
+# print(tf.math.reduce_mean(tensor, 0))
+# print(tf.math.reduce_std(tensor, 0))
+
 # The 0 indicates we're doing this calculation across the first axis
 # An example is helpful here. Pretend our tensor is [[1, 1], [2, 2]]
 # tf.math.reduce_mean(tensor, 0) would produce [1.5, 1.5]. That's the average for each column
@@ -154,3 +160,20 @@ print(tf.math.reduce_std(tensor, 0))
 # tf.Tensor([ 0.  0. -0. -0.  0.  0. -0. -0.  0.], shape=(9,), dtype=float32)
 # tf.Tensor([1. 1. 1. 1. 1. 1. 1. 1. 1.], shape=(9,), dtype=float32)
 # The mean is 0 for each column, and the variance is 1. Exactly what we wanted.
+
+# Now that we know how to normalize our dataset, we want to train our model to
+# predict MPG from horsepower. 
+
+# Get the horsepower
+horsepower = np.array(train_features['Horsepower'])
+
+# Normalize it
+horsepower_normalizer = preprocessing.Normalization()
+horsepower_normalizer.adapt(horsepower)
+
+horsepower_model = tf.keras.Sequential([
+    horsepower_normalizer,
+    layers.Dense(units=1)
+])
+
+horsepower_model.summary()
