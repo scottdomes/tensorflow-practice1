@@ -73,12 +73,25 @@ train_dataset.describe().transpose()
 # Show just mean and std
 train_dataset.describe().transpose()[['mean', 'std']]
 
+# We can also represent our values as a tensor.
+# This produces a 2D tensor of shape 314, 9. In English that means
+# it creates an array of arrays. There are 314 arrays, and each is 9 items long
+# A 2D tensor is AKA a matrix, btw
+# If we limit it to just the first five rows...
+print(np.array(train_dataset[:5]))
+# ... it looks like so:
+# [[   4.    90.    75.  2125.    14.5   74.     0.     0.     1. ]
+#  [   4.   140.    88.  2890.    17.3   79.     0.     0.     1. ]
+#  [   8.   350.   160.  4456.    13.5   72.     0.     0.     1. ]
+#  [   4.   105.    63.  2125.    14.7   82.     0.     0.     1. ]
+#  [   4.    97.    67.  2145.    18.    80.     0.     1.     0. ]]
+# Note that this tensor is of shape 5, 9, since we only took the first 5 values in our dataset.
+
 # We want to predict MPG, so we need to split it away from the other features
 train_features = train_dataset.copy()
 test_features = test_dataset.copy()
 train_labels = train_features.pop('MPG')
 test_labels = test_features.pop('MPG')
-
 
 # Our data has lots of variance in range, e.g. from train_features:
 #                      mean         std
@@ -86,6 +99,7 @@ test_labels = test_features.pop('MPG')
 # Displacement   195.318471  104.331589
 # Horsepower     104.869427   38.096214
 # Weight        2990.251592  843.898596
+# (this comes from print(train_features.describe().transpose()[['mean', 'std']]))
 # To make our training more stable, we should normalize it
 # Our goal is to have a mean of 0 and a variance of 1 for every value
 # To do that, we make certain values more important, and others less
@@ -96,7 +110,32 @@ test_labels = test_features.pop('MPG')
 
 # Create the normalizer
 normalizer = preprocessing.Normalization()
-# Teaches the normalizer to coerce the inputs to mean 0 std 1
+# Teaches the normalizer to coerce the inputs to mean 0 variance 1
 normalizer.adapt(np.array(train_features))
-print(train_features[:5].describe().transpose()[['mean', 'std']])
-print(normalizer(train_features))
+
+# Produces a tensor of normalized values from our dataset
+tensor = normalizer(train_features)
+
+# Remember our original tensor above? It looked like this:
+# [[   4.    90.    75.  2125.    14.5   74.     0.     0.     1. ]
+#  [   4.   140.    88.  2890.    17.3   79.     0.     0.     1. ]
+#  [   8.   350.   160.  4456.    13.5   72.     0.     0.     1. ]
+#  [   4.   105.    63.  2125.    14.7   82.     0.     0.     1. ]
+#  [   4.    97.    67.  2145.    18.    80.     0.     1.     0. ]]
+
+# Well, check out the normalized version...
+print(tensor[:5])
+# [[-0.871 -1.011 -0.785 -1.027 -0.38  -0.517 -0.466 -0.496  0.776]
+#  [-0.871 -0.531 -0.444 -0.119  0.625  0.845 -0.466 -0.496  0.776]
+#  [ 1.486  1.485  1.449  1.74  -0.739 -1.062 -0.466 -0.496  0.776]
+#  [-0.871 -0.867 -1.101 -1.027 -0.309  1.663 -0.466 -0.496  0.776]
+#  [-0.871 -0.944 -0.996 -1.003  0.876  1.118 -0.466  2.016 -1.289]]
+
+# Look at the first column. 4 cylinders becomes -0.871, 8 cylinders becomes 1.486.
+# In column 2, 90 displacement becomes -1.011, and 350 becomes 1.485.
+# The mean is 0 for each column, and the variance is 1. 
+
+print(tf.math.reduce_std(tensor))
+print(tf.math.reduce_variance(tensor))
+print(tf.math.reduce_mean(tensor))
+print(tf.math.reduce_mean(np.array(train_features)))
