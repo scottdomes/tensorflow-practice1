@@ -7,6 +7,7 @@ import tensorflow as tf
 from tensorflow import keras
 from tensorflow.keras import layers
 from tensorflow.keras.layers.experimental import preprocessing
+from tensorflow.python.framework import tensor_shape
 
 # Make numpy printouts easier to read.
 np.set_printoptions(precision=3, suppress=True)
@@ -63,7 +64,7 @@ test_dataset = dataset.drop(train_dataset.index)
 
 # Plots the data into a pairwise plot, which shows the variables
 # in relation to each other. Good for establishing relationships
-sns.pairplot(train_dataset[['MPG', 'Cylinders', 'Displacement', 'Weight']], diag_kind='kde')
+# sns.pairplot(train_dataset[['MPG', 'Cylinders', 'Displacement', 'Weight']], diag_kind='kde')
 
 # plt.show()
 
@@ -171,15 +172,36 @@ horsepower = np.array(train_features['Horsepower'])
 horsepower_normalizer = preprocessing.Normalization()
 horsepower_normalizer.adapt(horsepower)
 
+# Use a set seed so I can compare my manual results consistently
+initializer = tf.keras.initializers.GlorotUniform(seed=1)
+
 horsepower_model = tf.keras.Sequential([
-    horsepower_normalizer,
-    layers.Dense(units=1)
+    # horsepower_normalizer,
+    layers.Dense(units=1, kernel_initializer=initializer)
 ])
 
 # horsepower_model.summary()
 
 # normalized = normalizer(horsepower[:10])
 # print(normalized)
-# output = horsepower_model.predict(horsepower[:10])
+output = horsepower_model.predict(horsepower[:10])
 
-# print(output)
+print("MODEL PREDICTION:")
+print(output)
+
+# Manual prediction
+kernel = initializer(shape=(10, 1))
+input_value = horsepower[:10]
+input_value = tf.reshape(input_value, [10, 1])
+input_value = tf.cast(input_value, tf.float32)
+print(input_value)
+print(kernel)
+matrix_product = tf.tensordot(input_value, kernel, 1)
+
+# input_shape = tensor_shape.TensorShape(input_value.shape)
+# last_dim = tensor_shape.dimension_value(input_shape[-1])
+# print(input_shape)
+# print(last_dim)
+
+print("MANUAL PREDICTION:")
+print(matrix_product)
