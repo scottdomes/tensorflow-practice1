@@ -176,7 +176,7 @@ horsepower_normalizer.adapt(horsepower)
 # For a manual implementation of the below lines, see manual.py
 horsepower_model = tf.keras.Sequential([
     horsepower_normalizer,
-    layers.Dense(units=1)
+    layers.Dense(units=1, kernel_initializer=tf.keras.initializers.GlorotUniform(seed=1)) # TODO: Remove initialzier
 ])
 
 horsepower_model.summary()
@@ -197,8 +197,22 @@ predict = horsepower_model.predict(horsepower[:10])
 #        [ 0.397],
 #        [ 0.679]], dtype=float32)
 
-x = tf.linspace(0.0, 250, 251)
+x = tf.linspace(0.0, 10, 11) # Should be 250, 251 for 2nd and 3rd args
 y = horsepower_model.predict(x)
+# tf.print(y)
+# This result is consistent
+# array([[-3.615],
+#        [-3.58 ],
+#        [-3.546],
+#        [-3.512],
+#        [-3.477],
+#        [-3.443],
+#        [-3.408],
+#        [-3.374],
+#        [-3.339],
+#        [-3.305],
+#        [-3.27 ]], dtype=float32)
+
 
 def plot_horsepower(x, y):
   plt.scatter(train_features['Horsepower'], train_labels, label='Data')
@@ -218,7 +232,7 @@ horsepower_model.compile(
 
 history = horsepower_model.fit(
     train_features['Horsepower'], train_labels,
-    epochs=100,
+    epochs=1,
     # suppress logging
     verbose=0,
     # Calculate validation results on 20% of the training data
@@ -229,4 +243,34 @@ hist['epoch'] = history.epoch
 # tf.print(hist.tail())
 
 y = horsepower_model.predict(x)
-plot_horsepower(x,y)
+tf.print(y)
+# There is variance in the below values!! But of course, less so in 100 epochs
+# For 1 epoch, y = 
+# array([[-2.764],
+#        [-2.73 ],
+#        [-2.696],
+#        [-2.662],
+#        [-2.628],
+#        [-2.594],
+#        [-2.56 ],
+#        [-2.526],
+#        [-2.492],
+#        [-2.458],
+#        [-2.424]], dtype=float32)
+# For 100 epochs, y =
+# array([[39.869],
+#        [39.704],
+#        [39.539],
+#        [39.374],
+#        [39.208],
+#        [39.043],
+#        [38.878],
+#        [38.713],
+#        [38.548],
+#        [38.383],
+#        [38.218]], dtype=float32)
+
+
+
+
+# plot_horsepower(x,y)
