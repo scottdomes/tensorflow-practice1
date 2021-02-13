@@ -176,4 +176,10 @@ horsepower_model = tf.keras.Sequential([
     layers.Dense(units=1)
 ])
 
-horsepower_model.summary()
+# horsepower_model.summary()
+
+# normalized = normalizer(horsepower[:10])
+# print(normalized)
+# output = horsepower_model.predict(horsepower[:10])
+
+# print(output)
