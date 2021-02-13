@@ -208,8 +208,8 @@ def plot_horsepower(x, y):
   plt.legend()
   plt.show()
 
+# Plot the shitty guesses from the untrained model. What a doofus
 # plot_horsepower(x,y)
-
 
 # Sets config for model training
 horsepower_model.compile(
