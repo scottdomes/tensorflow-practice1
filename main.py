@@ -133,9 +133,24 @@ print(tensor[:5])
 
 # Look at the first column. 4 cylinders becomes -0.871, 8 cylinders becomes 1.486.
 # In column 2, 90 displacement becomes -1.011, and 350 becomes 1.485.
-# The mean is 0 for each column, and the variance is 1. 
 
-print(tf.math.reduce_std(tensor))
-print(tf.math.reduce_variance(tensor))
-print(tf.math.reduce_mean(tensor))
-print(tf.math.reduce_mean(np.array(train_features)))
+# Recall our old std and mean?
+#                      mean         std
+# Cylinders        5.477707    1.699788
+# Displacement   195.318471  104.331589
+# Horsepower     104.869427   38.096214
+# Weight        2990.251592  843.898596
+# What's the new standard deviation? Well, let's see
+# These commands produce the STD and mean for each column
+print(tf.math.reduce_mean(tensor, 0))
+print(tf.math.reduce_std(tensor, 0))
+# The 0 indicates we're doing this calculation across the first axis
+# An example is helpful here. Pretend our tensor is [[1, 1], [2, 2]]
+# tf.math.reduce_mean(tensor, 0) would produce [1.5, 1.5]. That's the average for each column
+# tf.math.reduce_mean(tensor, 1) would produce [1, 2]. That's the average for each item
+# So if we ran tf.math.reduce_mean(tensor, 1) with our MPG data, we'd get an array 314 items long,
+# and the average would for cylinders + displacements + horsepower, etc... not very useful
+# Anyway, here's what these two commands give us:
+# tf.Tensor([ 0.  0. -0. -0.  0.  0. -0. -0.  0.], shape=(9,), dtype=float32)
+# tf.Tensor([1. 1. 1. 1. 1. 1. 1. 1. 1.], shape=(9,), dtype=float32)
+# The mean is 0 for each column, and the variance is 1. Exactly what we wanted.
