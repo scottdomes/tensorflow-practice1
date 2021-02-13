@@ -190,18 +190,12 @@ print("MODEL PREDICTION:")
 print(output)
 
 # Manual prediction
-kernel = initializer(shape=(10, 1))
+kernel = initializer(shape=(1, 1))
+# Kernel shape should equal [last dimension of input shape, units]
 input_value = horsepower[:10]
 input_value = tf.reshape(input_value, [10, 1])
 input_value = tf.cast(input_value, tf.float32)
-print(input_value)
-print(kernel)
 matrix_product = tf.tensordot(input_value, kernel, 1)
-
-# input_shape = tensor_shape.TensorShape(input_value.shape)
-# last_dim = tensor_shape.dimension_value(input_shape[-1])
-# print(input_shape)
-# print(last_dim)
 
 print("MANUAL PREDICTION:")
 print(matrix_product)
