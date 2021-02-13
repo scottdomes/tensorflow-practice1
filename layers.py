@@ -8,30 +8,26 @@ from tensorflow import keras
 from tensorflow.keras import layers
 from tensorflow.keras.layers.experimental import preprocessing
 
+data = tf.constant([[2,3], [1, 1]])
 
-data = tf.constant([[[2,3], [1, 1]], [[2, 3], [1, 1]]])
+print(np.matmul([2,3], [1, 1]))
 
-# print(data)
-# Normalize it
-normalizer = preprocessing.Normalization()
-normalizer.adapt(data)
-
-
-# print(normalizer)
 model = tf.keras.Sequential([
-    layers.Dense(units=1, use_bias=False)
+    layers.Dense(units=0, use_bias=False, kernel_initializer=None, activation=None)
 ])
 
-# model.summary()
+expected_output = tf.tensordot([2,3], [1, 1], 1)
 
-# normalized = normalizer(data)
-# print(normalized)
-
-# print(model.bias)
-# print(model.kernel)
-# expected_output = activation(dot(input, kernel))
-expected_output = tf.tensordot([[2,3], [1, 1]], [[2,3], [1, 1]], 2)
 print(expected_output)
+
+
+initializer = tf.keras.initializers.GlorotUniform(seed=1)
+values = initializer(shape=(2, 2))
+print(values)
+cast = tf.cast(values, tf.int32)
+print(cast)
+test = tf.tensordot(data, cast, [[2 - 1], [0]])
+print(test)
 
 output = model.predict(data)
 
