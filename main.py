@@ -172,30 +172,61 @@ horsepower = np.array(train_features['Horsepower'])
 horsepower_normalizer = preprocessing.Normalization()
 horsepower_normalizer.adapt(horsepower)
 
-# Use a set seed so I can compare my manual results consistently
-initializer = tf.keras.initializers.GlorotUniform(seed=1)
-
+# For a detail breakdown of this, see horsepower.py
+# For a manual implementation of the below lines, see manual.py
 horsepower_model = tf.keras.Sequential([
-    # horsepower_normalizer,
-    layers.Dense(units=1, kernel_initializer=initializer)
+    horsepower_normalizer,
+    layers.Dense(units=1)
 ])
 
-# horsepower_model.summary()
+horsepower_model.summary()
 
-# normalized = normalizer(horsepower[:10])
-# print(normalized)
-output = horsepower_model.predict(horsepower[:10])
+# Shows you the expected shape of the outcome: (10, 1)
+# Values may differ based on initializer used for the dense layer
+# See horsepower.py for how to use a fixed initializer
+predict = horsepower_model.predict(horsepower[:10])
+# tf.print(predict)
+# array([[ 1.202],
+#        [ 0.679],
+#        [-2.218],
+#        [ 1.685],
+#        [ 1.524],
+#        [ 0.598],
+#        [ 1.805],
+#        [ 1.524],
+#        [ 0.397],
+#        [ 0.679]], dtype=float32)
 
-print("MODEL PREDICTION:")
-print(output)
+x = tf.linspace(0.0, 250, 251)
+y = horsepower_model.predict(x)
 
-# Manual prediction
-kernel = initializer(shape=(1, 1))
-# Kernel shape should equal [last dimension of input shape, units]
-input_value = horsepower[:10]
-input_value = tf.reshape(input_value, [10, 1])
-input_value = tf.cast(input_value, tf.float32)
-matrix_product = tf.tensordot(input_value, kernel, 1)
+def plot_horsepower(x, y):
+  plt.scatter(train_features['Horsepower'], train_labels, label='Data')
+  plt.plot(x, y, color='k', label='Predictions')
+  plt.xlabel('Horsepower')
+  plt.ylabel('MPG')
+  plt.legend()
+  plt.show()
 
-print("MANUAL PREDICTION:")
-print(matrix_product)
+# plot_horsepower(x,y)
+
+
+# Sets config for model training
+horsepower_model.compile(
+    optimizer=tf.optimizers.Adam(learning_rate=0.1),
+    loss='mean_absolute_error')
+
+history = horsepower_model.fit(
+    train_features['Horsepower'], train_labels,
+    epochs=100,
+    # suppress logging
+    verbose=0,
+    # Calculate validation results on 20% of the training data
+    validation_split = 0.2)
+
+hist = pd.DataFrame(history.history)
+hist['epoch'] = history.epoch
+# tf.print(hist.tail())
+
+y = horsepower_model.predict(x)
+plot_horsepower(x,y)
