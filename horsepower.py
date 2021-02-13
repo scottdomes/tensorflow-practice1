@@ -52,7 +52,6 @@ matrix_product = tf.tensordot(input_value, kernel, 1)
 
 print("UNNORMALIZED MANUAL PREDICTION:")
 print(matrix_product)
-
 # NORMALIZED PREDICTIONS
 
 # Model prediction
