@@ -33,13 +33,13 @@ print(results)
 
 # The below code is the equivalent of...
 # horsepower_model.compile(
-#     optimizer=dummy_optimizer_that_does_nothing,
+#     optimizer=DummyOptimizer(),
 #     loss='mean_absolute_error')
 
 # history = horsepower_model.fit(
 #     train_features['Horsepower'], train_labels,
-#     epochs=1,
+#     epochs=100, # Number of epochs really doesn't matter
 #     # suppress logging
-#     verbose=0,
-#     # Calculate validation results on 20% of the training data
-#     validation_split = 0.2)
+#     verbose=0)
+
+# Which yields a loss of 23.310509

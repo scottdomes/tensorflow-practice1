@@ -80,4 +80,4 @@ normalized_value = horsepower_normalizer(horsepower[:10])
 matrix_product = tf.tensordot(normalized_value, kernel, 1)
 
 print("NORMALIZED MANUAL PREDICTION:")
-print(matrix_product)
+tf.print(matrix_product)
