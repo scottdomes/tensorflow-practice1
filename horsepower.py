@@ -13,7 +13,7 @@ from tensorflow.python.framework import tensor_shape
 np.set_printoptions(precision=3, suppress=True)
 
 # Cleaning and fetching data. See main.py for more info
-url = 'http://archive.ics.uci.edu/ml/machine-learning-databases/auto-mpg/auto-mpg.data'
+url = './auto-mpg.data'
 column_names = ['MPG', 'Cylinders', 'Displacement', 'Horsepower', 'Weight',
                 'Acceleration', 'Model Year', 'Origin']
 raw_dataset = pd.read_csv(url, names=column_names,

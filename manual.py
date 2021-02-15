@@ -84,11 +84,15 @@ matrix_product = tf.tensordot(normalized_value, kernel, 1)
 array = np.array(matrix_product)
 # print(array)
 
+mae_results = []
+
 for index, value in enumerate(array):
   horsepower_value = value
   mpg_value = mpg[index]
-  result = np.mean(np.abs((mpg_value - horsepower_value)/mpg_value))*100
-  print(result)
+  mae_results.append(np.abs(mpg_value - horsepower_value))
+
+mae = np.mean(mae_results)
+print(mae)
 
 
 # loss = 0
