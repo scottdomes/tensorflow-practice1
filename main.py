@@ -244,6 +244,9 @@ horsepower_model.compile(
     loss='mean_absolute_error') #   `loss = mean(abs(y_true - y_pred), axis=-1)`
 
 
+tf.print(train_features['Horsepower'][:10])
+tf.print(train_labels[:10])
+
 history = horsepower_model.fit(
     train_features['Horsepower'], train_labels,
     epochs=100,

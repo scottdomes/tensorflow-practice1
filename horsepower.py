@@ -75,7 +75,6 @@ input_value = horsepower[:10]
 input_value = tf.reshape(input_value, [10, 1])
 input_value = tf.cast(input_value, tf.float32)
 
-
 normalized_value = horsepower_normalizer(horsepower[:10])
 matrix_product = tf.tensordot(normalized_value, kernel, 1)
 
