@@ -81,21 +81,46 @@ normalized_value = horsepower_normalizer(horsepower[:10])
 matrix_product = tf.tensordot(normalized_value, kernel, 1)
 # tf.print(matrix_product)
 
-array = np.array(matrix_product)
+horsepower_matrix = np.array(matrix_product)
 # print(array)
 
-mae_results = []
 
-for index, value in enumerate(array):
-  horsepower_value = value
-  mpg_value = mpg[index]
-  mae_results.append(np.abs(mpg_value - horsepower_value))
+def calculate_mae(data):
+  mae_results = []
 
-mae = np.mean(mae_results)
-print(mae)
+  for index, value in enumerate(data):
+    horsepower_value = value
+    mpg_value = mpg[index]
+    mae_results.append(np.abs(mpg_value - horsepower_value))
+
+  return np.mean(mae_results)
+
+# print(calculate_mae(horsepower_matrix))
 # 26.834576
 
 # STAGE THREE: Loss function + dummy optimizer + plotting
+
+def train_over_epochs(data, epochs = 100):
+  epoch_results = []
+  i = 0
+  while i < epochs:
+    epoch_results.append(calculate_mae(data))
+    i = i + 1
+  
+  return epoch_results
+
+def plot_loss(results):
+  plt.plot(results, label='loss')
+  plt.ylim([0, 30]) 
+  plt.xlabel('Epoch')
+  plt.ylabel('Error [MPG]')
+  plt.legend()
+  plt.grid(True)
+  plt.show()
+
+epoch_data = train_over_epochs(horsepower_matrix, 100)
+print(epoch_data)
+plot_loss(epoch_data)
 
 # STAGE FOUR: Simple optimizer
 
