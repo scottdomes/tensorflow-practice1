@@ -1,6 +1,9 @@
 import tensorflow as tf
 
 # This is me trying to manually build a simple neural network, step by step
+
+
+# STAGE ONE: Blind prediction
 # The below code is the equivalent of...
 # horsepower_model = tf.keras.Sequential([
 #     layers.Dense(units=1, kernel_initializer=tf.keras.initializers.GlorotUniform(seed=1))
@@ -25,3 +28,18 @@ for horsepower_unit in horsepower:
   results.append([horsepower_unit[0] * kernel_value])
 
 print(results)
+
+# STAGE TWO: Loss function + dummy optimizer
+
+# The below code is the equivalent of...
+# horsepower_model.compile(
+#     optimizer=dummy_optimizer_that_does_nothing,
+#     loss='mean_absolute_error')
+
+# history = horsepower_model.fit(
+#     train_features['Horsepower'], train_labels,
+#     epochs=1,
+#     # suppress logging
+#     verbose=0,
+#     # Calculate validation results on 20% of the training data
+#     validation_split = 0.2)

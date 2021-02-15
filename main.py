@@ -8,6 +8,8 @@ from tensorflow import keras
 from tensorflow.keras import layers
 from tensorflow.keras.layers.experimental import preprocessing
 from tensorflow.python.framework import tensor_shape
+from tensorflow.python.keras.optimizer_v2 import optimizer_v2
+from dummy_optimizer import DummyOptimizer
 
 # Make numpy printouts easier to read.
 np.set_printoptions(precision=3, suppress=True)
@@ -222,17 +224,28 @@ def plot_horsepower(x, y):
   plt.legend()
   plt.show()
 
+def plot_loss(history):
+  plt.plot(history.history['loss'], label='loss')
+  plt.plot(history.history['val_loss'], label='val_loss')
+  plt.ylim([0, 25]) # Should only be [0, 10] for when loss actually declines
+  plt.xlabel('Epoch')
+  plt.ylabel('Error [MPG]')
+  plt.legend()
+  plt.grid(True)
+  plt.show()
+
 # Plot the shitty guesses from the untrained model. What a doofus
 # plot_horsepower(x,y)
 
 # Sets config for model training
 horsepower_model.compile(
-    optimizer=tf.optimizers.Adam(learning_rate=0.1),
+    # optimizer=tf.optimizers.Adam(learning_rate=0.1),
+    optimizer=DummyOptimizer(),
     loss='mean_absolute_error')
 
 history = horsepower_model.fit(
     train_features['Horsepower'], train_labels,
-    epochs=1,
+    epochs=100,
     # suppress logging
     verbose=0,
     # Calculate validation results on 20% of the training data
@@ -240,10 +253,13 @@ history = horsepower_model.fit(
 
 hist = pd.DataFrame(history.history)
 hist['epoch'] = history.epoch
-# tf.print(hist.tail())
+tf.print(hist.tail())
+
+plot_loss(history)
+
 
 y = horsepower_model.predict(x)
-tf.print(y)
+# tf.print(y)
 # There is variance in the below values!! But of course, less so in 100 epochs
 # For 1 epoch, y = 
 # array([[-2.764],
