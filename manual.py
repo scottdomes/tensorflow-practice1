@@ -8,6 +8,7 @@ from tensorflow import keras
 from tensorflow.keras import layers
 from tensorflow.keras.layers.experimental import preprocessing
 from tensorflow.python.framework import tensor_shape
+from simple_optimizer import SimpleOptimizer
 
 # This is me trying to manually build a simple neural network, step by step
 
@@ -24,8 +25,9 @@ dataset = dataset.dropna()
 train_dataset = dataset.sample(frac=0.8, random_state=0)
 test_dataset = dataset.drop(train_dataset.index)
 train_features = train_dataset.copy()
+train_labels = train_features.pop('MPG')
 horsepower = np.array(train_features['Horsepower'])
-mpg = np.array(train_features['MPG'])
+mpg = np.array(test_dataset['MPG'])
 
 # STAGE ONE: Blind prediction
 # The below code is the equivalent of...
@@ -100,7 +102,7 @@ def calculate_mae(data):
 
 # STAGE THREE: Loss function + dummy optimizer + plotting
 
-def train_over_epochs(data, epochs = 100):
+def plot_mae_over_epochs(data, epochs = 100):
   epoch_results = []
   i = 0
   while i < epochs:
@@ -118,10 +120,29 @@ def plot_loss(results):
   plt.grid(True)
   plt.show()
 
-epoch_data = train_over_epochs(horsepower_matrix, 100)
-print(epoch_data)
-plot_loss(epoch_data)
+epoch_data = plot_mae_over_epochs(horsepower_matrix, 100)
+# print(epoch_data)
+# plot_loss(epoch_data)
 
 # STAGE FOUR: Simple optimizer
+
+# If only using the first 10 rows of the data, Adam takes just under 200 epochs
+# to stabilize at a loss of 3.700616
+# The below code takes just under 20 epochs to stabilize at 12.184467
+# That's the number to beat
+# horsepower_model = tf.keras.Sequential([
+#     layers.Dense(units=1, kernel_initializer=tf.keras.initializers.GlorotUniform(seed=1))
+# ])
+# horsepower_model.compile(
+#     optimizer=SimpleOptimizer(),
+#     loss='mean_absolute_error')
+# history = horsepower_model.fit(
+#     train_features['Horsepower'][:10], train_labels[:10],
+#     epochs=100, # Number of epochs really doesn't matter
+#     # suppress logging
+#     verbose=0)
+
+
+
 
 # STAGE FIVE: Adam optimizer

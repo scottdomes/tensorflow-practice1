@@ -233,20 +233,17 @@ def plot_loss(history):
   plt.ylabel('Error [MPG]')
   plt.legend()
   plt.grid(True)
-  # plt.show()
+  plt.show()
 
 # Plot the shitty guesses from the untrained model. What a doofus
 # plot_horsepower(x,y)
 
 # Sets config for model training
 horsepower_model.compile(
-    # optimizer=tf.optimizers.Adam(learning_rate=0.1),
-    optimizer=DummyOptimizer(),
+    optimizer=tf.optimizers.Adam(learning_rate=0.1),
+    # optimizer=DummyOptimizer(),
     loss='mean_absolute_error') #   `loss = mean(abs(y_true - y_pred), axis=-1)`
 
-
-tf.print(train_features['Horsepower'][:10])
-tf.print(train_labels[:10])
 
 history = horsepower_model.fit(
     train_features['Horsepower'], train_labels,
