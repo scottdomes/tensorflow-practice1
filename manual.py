@@ -93,14 +93,7 @@ for index, value in enumerate(array):
 
 mae = np.mean(mae_results)
 print(mae)
-
-
-# loss = 0
-# K.mean(math_ops.abs(y_pred - y_true), axis=-1)
-# for value in predictions
-# np.mean(np.abs((Y_actual - Y_Predicted)/Y_actual))*100
-
-
+# 26.834576
 
 # STAGE THREE: Loss function + dummy optimizer + plotting
 
