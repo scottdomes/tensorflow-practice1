@@ -113,7 +113,7 @@ horsepower_matrix = np.array(matrix_product)
 
 def plot_loss(results):
   plt.plot(results, label='loss')
-  plt.ylim([0, 100]) 
+  plt.ylim([-100, 100]) 
   plt.xlabel('Epoch')
   plt.ylabel('Error [MPG]')
   plt.legend()
@@ -148,7 +148,7 @@ history = horsepower_model.fit(
 
 # For more on this code, see simple_descent.py
 def calculate_mse(theta, data_to_predict_to, data_to_predict_from):
-  generator = [(data_to_predict_from[i] + theta - data_to_predict_to[i]) * (data_to_predict_from[i] + theta - data_to_predict_to[i]) for i in range(len(data_to_predict_from))]
+  generator = [(data_to_predict_from[i] * theta - data_to_predict_to[i]) * (data_to_predict_from[i] * theta - data_to_predict_to[i]) for i in range(len(data_to_predict_from))]
   array = np.asarray(generator)
   return 1/len(data_to_predict_from) * sum(array)
 
@@ -175,6 +175,7 @@ def gradient_descent(data_to_predict_to, data_to_predict_from, epochs, initial_t
 # print(history)
 
 history = gradient_descent(mpg, horsepower_matrix, 100, 1)
+print(history)
 plot_loss(history)
 
 # STAGE SIX: Custom Adam optimizer with TF
