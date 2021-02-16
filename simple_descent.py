@@ -36,12 +36,12 @@ def calculate_derivative(theta):
 # print(mse)
 
 
-possible_thetas = np.linspace(-10, 10, 200) 
+possible_thetas = np.linspace(-5, 10, 200) 
 print(possible_thetas)
 possible_mses = np.asarray([calculate_mse(i) for i in possible_thetas]) 
 print(possible_mses)
 
-x_axis = np.linspace(-4, 4, 200)
+x_axis = possible_thetas
 y_axis = possible_mses
 
 print(y_axis)
@@ -49,6 +49,7 @@ print(y_axis)
 plt.xlabel('theta')
 plt.ylabel('mse')
 plt.plot(x_axis, y_axis)
+plt.plot(x_axis, np.linspace(0,0, 200))
 # plt.show()
 
 def gradient_descent(initial_theta, epochs):
@@ -63,7 +64,7 @@ def gradient_descent(initial_theta, epochs):
     print(theta)
     print('----')
     derivative = calculate_derivative(theta)
-    plt.scatter(mse, theta)
+    plt.scatter(theta, mse)
     plt.pause(0.5)
     theta = theta - learning_rate * derivative
 
