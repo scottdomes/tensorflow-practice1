@@ -50,7 +50,6 @@ plt.xlabel('theta')
 plt.ylabel('mse')
 plt.plot(x_axis, y_axis)
 plt.plot(x_axis, np.linspace(0,0, 200))
-# plt.show()
 
 def gradient_descent(initial_theta, epochs):
   theta_values = []
@@ -71,30 +70,3 @@ def gradient_descent(initial_theta, epochs):
   plt.show()
 
 gradient_descent(10, 20)
-
-# t0 = 0
-# t1 = 0
-# m = 10
-# grad0 = 1.0/m * sum([(t0 + t1*np.asarray([x[i]]) - y[i]) for i in range(m)])
-# grad1 = 1.0/m * sum([(t0 + t1*np.asarray([x[i]]) - y[i])*np.asarray([x[i]]) for i in range(m)])
-
-# print(grad0)
-# print(grad1)
-
-
-# learning rate
-lr = 0.1
-np.random.seed(20)
-x_start = np.random.normal(0, 2, 1)
-dy_dx_old = 2 * x_start
-dy_dx_new = 0
-
-tolerance = 1e-2
-# stop once the value has converged
-# while abs(dy_dx_new - dy_dx_old) > tolerance:
-#     dy_dx_old = dy_dx_new
-#     x_start = x_start - lr * dy_dx_old
-#     dy_dx_new = 2 * x_start
-#     plt.scatter(x_start, x_start**2)
-#     plt.pause(0.5)
-# plt.show()
