@@ -87,29 +87,29 @@ horsepower_matrix = np.array(matrix_product)
 # print(array)
 
 
-def calculate_mae(data):
-  mae_results = []
+# def calculate_mae(dataset1, dataset2, weight = 1):
+#   mae_results = []
 
-  for index, value in enumerate(data):
-    horsepower_value = value
-    mpg_value = mpg[index]
-    mae_results.append(np.abs(mpg_value - horsepower_value))
+#   for index, value in enumerate(data):
+#     value1 = value * weight
+#     value2 = dataset2[index]
+#     mae_results.append(np.abs(value2 - value1))
 
-  return np.mean(mae_results)
+#   return np.mean(mae_results)
 
 # print(calculate_mae(horsepower_matrix))
 # 26.834576
 
 # STAGE THREE: Loss function + dummy optimizer + plotting
 
-def plot_mae_over_epochs(data, epochs = 100):
-  epoch_results = []
-  i = 0
-  while i < epochs:
-    epoch_results.append(calculate_mae(data))
-    i = i + 1
+# def plot_mae_over_epochs(dataset1, dataset2, epochs = 100, weight = 1):
+#   epoch_results = []
+#   i = 0
+#   while i < epochs:
+#     epoch_results.append(calculate_mae(dataset1, dataset2, weight))
+#     i = i + 1
   
-  return epoch_results
+#   return epoch_results
 
 def plot_loss(results):
   plt.plot(results, label='loss')
@@ -120,11 +120,11 @@ def plot_loss(results):
   plt.grid(True)
   plt.show()
 
-epoch_data = plot_mae_over_epochs(horsepower_matrix, 100)
+# epoch_data = plot_mae_over_epochs(horsepower_matrix, mpg, 100, 1)
 # print(epoch_data)
 # plot_loss(epoch_data)
 
-# STAGE FOUR: Simple optimizer
+# STAGE FOUR: Simple optimizer via TF
 
 # If only using the first 10 rows of the data, Adam takes just under 200 epochs
 # to stabilize at a loss of 3.700616
@@ -142,7 +142,40 @@ epoch_data = plot_mae_over_epochs(horsepower_matrix, 100)
 #     # suppress logging
 #     verbose=0)
 
+# STAGE FIVE: Simple optimizer manually
 
 
+def calculate_mae(data_to_predict_to, data_to_predict_from, weight):
+  absolute_errors = []
+  for index, value in enumerate(data_to_predict_from):
+    prediction = weight * value
+    actual = data_to_predict_to[index]
+    difference = actual - prediction
+    absolute_errors.append(np.abs(difference))
 
-# STAGE FIVE: Adam optimizer
+  return np.mean(absolute_errors)
+
+def calculate_new_weight(mae, weight, weight_adjustment):
+  if mae > 0:
+    return weight - weight_adjustment
+  else:
+    return weight + weight_adjustment
+
+    
+def step_through_epochs(data_to_predict_to, data_to_predict_from, epochs, weight_adjustment, default_weight = 1):
+  history = dict()
+  weight = default_weight
+  i = 0
+  while i < epochs:
+    mae = calculate_mae(data_to_predict_to, data_to_predict_from, weight)
+    weight = calculate_new_weight(mae, weight, weight_adjustment)
+    history[i] = mae
+    i = i + 1
+  
+  return history
+
+history = step_through_epochs(mpg, horsepower_matrix, 1000, .1, 1)
+
+print(history)
+
+# STAGE SIX: Custom Adam optimizer with TF
