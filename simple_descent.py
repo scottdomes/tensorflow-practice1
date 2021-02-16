@@ -12,10 +12,12 @@ import matplotlib.pyplot as plt
 
 # The derivative of the mean squared error is in respect to theta
 
-theta = 4
+# theta = 4
 learning_rate = 0.1
-x = np.array([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
-y = np.array([4, 5, 6, 7, 8, 9, 10, 11, 12, 13])
+# x = np.array([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
+# y = np.array([4, 5, 6, 7, 8, 9, 10, 11, 12, 13])
+x = np.linspace(1, 200, 200)
+y = x + 3
 
 def calculate_mse(theta):
   generator = [(x[i] + theta - y[i]) * (x[i] + theta - y[i]) for i in range(len(x))]
@@ -34,6 +36,21 @@ def calculate_derivative(theta):
 # print(mse)
 
 
+possible_thetas = np.linspace(-10, 10, 200) 
+print(possible_thetas)
+possible_mses = np.asarray([calculate_mse(i) for i in possible_thetas]) 
+print(possible_mses)
+
+x_axis = np.linspace(-4, 4, 200)
+y_axis = possible_mses
+
+print(y_axis)
+
+plt.xlabel('theta')
+plt.ylabel('mse')
+plt.plot(x_axis, y_axis)
+# plt.show()
+
 def gradient_descent(initial_theta, epochs):
   theta_values = []
   mse_values = []
@@ -46,9 +63,13 @@ def gradient_descent(initial_theta, epochs):
     print(theta)
     print('----')
     derivative = calculate_derivative(theta)
+    plt.scatter(mse, theta)
+    plt.pause(0.5)
     theta = theta - learning_rate * derivative
 
-gradient_descent(4, 20)
+  plt.show()
+
+gradient_descent(10, 20)
 
 # t0 = 0
 # t1 = 0
@@ -58,12 +79,7 @@ gradient_descent(4, 20)
 
 # print(grad0)
 # print(grad1)
-# x = np.linspace(-4, 4, 200)
-# y = x**2
 
-# plt.xlabel('x')
-# plt.ylabel('y = x^2')
-# plt.plot(x, y)
 
 # learning rate
 lr = 0.1
