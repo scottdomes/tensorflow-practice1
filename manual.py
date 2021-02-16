@@ -157,34 +157,6 @@ def calculate_derivative(theta, data_to_predict_to, data_to_predict_from):
   array = np.asarray(generator)
   return (2 * theta)/len(data_to_predict_from) * sum(array)
 
-def calculate_mae(data_to_predict_to, data_to_predict_from, weight):
-  absolute_errors = []
-  for index, value in enumerate(data_to_predict_from):
-    prediction = weight * value
-    actual = data_to_predict_to[index]
-    difference = actual - prediction
-    absolute_errors.append(np.abs(difference))
-
-  return np.mean(absolute_errors)
-
-def calculate_new_weight(mae, weight, weight_adjustment):
-  if mae > 0:
-    return weight - weight_adjustment
-  else:
-    return weight + weight_adjustment
-
-    
-def step_through_epochs(data_to_predict_to, data_to_predict_from, epochs, weight_adjustment, default_weight = 1):
-  history = dict()
-  weight = default_weight
-  i = 0
-  while i < epochs:
-    mae = calculate_mae(data_to_predict_to, data_to_predict_from, weight)
-    weight = calculate_new_weight(mae, weight, weight_adjustment)
-    history[i] = mae
-    i = i + 1
-  return history
-
 learning_rate = 0.001
 def gradient_descent(data_to_predict_to, data_to_predict_from, epochs, initial_theta):
   theta_values = []
