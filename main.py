@@ -226,6 +226,7 @@ def plot_horsepower(x, y):
   plt.show()
 
 def plot_loss(history):
+  print(history.history['loss'])
   plt.plot(history.history['loss'], label='loss')
   plt.plot(history.history['val_loss'], label='val_loss')
   plt.ylim([0, 25]) # Should only be [0, 10] for when loss actually declines
