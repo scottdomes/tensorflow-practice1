@@ -130,20 +130,21 @@ def plot_loss(results):
 # to stabilize at a loss of 3.700616
 # The below code takes just under 20 epochs to stabilize at 12.184467
 # That's the number to beat
-# horsepower_model = tf.keras.Sequential([
-#     layers.Dense(units=1, kernel_initializer=tf.keras.initializers.GlorotUniform(seed=1))
-# ])
-# horsepower_model.compile(
-#     optimizer=SimpleOptimizer(),
-#     loss='mean_absolute_error')
-# history = horsepower_model.fit(
-#     train_features['Horsepower'][:10], train_labels[:10],
-#     epochs=100, # Number of epochs really doesn't matter
-#     # suppress logging
-#     verbose=0)
+horsepower_model = tf.keras.Sequential([
+    layers.Dense(units=1, kernel_initializer=tf.keras.initializers.GlorotUniform(seed=1))
+])
+horsepower_model.compile(
+    optimizer=SimpleOptimizer(),
+    loss='mean_absolute_error')
+history = horsepower_model.fit(
+    train_features['Horsepower'][:10], train_labels[:10],
+    epochs=100, # Number of epochs really doesn't matter
+    # suppress logging
+    verbose=0)
+
+print(history.history)
 
 # STAGE FIVE: Simple optimizer manually
-
 
 def calculate_mae(data_to_predict_to, data_to_predict_from, weight):
   absolute_errors = []
@@ -174,8 +175,7 @@ def step_through_epochs(data_to_predict_to, data_to_predict_from, epochs, weight
   
   return history
 
-history = step_through_epochs(mpg, horsepower_matrix, 1000, .1, 1)
-
-print(history)
+# history = step_through_epochs(mpg, horsepower_matrix, 1000, .1, 1)
+# print(history)
 
 # STAGE SIX: Custom Adam optimizer with TF
