@@ -146,6 +146,17 @@ print(history.history)
 
 # STAGE FIVE: Simple optimizer manually
 
+# For more on this code, see simple_descent.py
+def calculate_mse(theta, data_to_predict_to, data_to_predict_from):
+  generator = [(data_to_predict_from[i] + theta - data_to_predict_to[i]) * (data_to_predict_from[i] + theta - data_to_predict_to[i]) for i in range(len(data_to_predict_from))]
+  array = np.asarray(generator)
+  return 1/len(data_to_predict_from) * sum(array)
+
+def calculate_derivative(theta, data_to_predict_to, data_to_predict_from):
+  generator = [data_to_predict_from[i] * theta - data_to_predict_to[i] for i in range(len(data_to_predict_from))]
+  array = np.asarray(generator)
+  return 2/len(data_to_predict_from) * sum(array)
+
 def calculate_mae(data_to_predict_to, data_to_predict_from, weight):
   absolute_errors = []
   for index, value in enumerate(data_to_predict_from):
@@ -172,10 +183,33 @@ def step_through_epochs(data_to_predict_to, data_to_predict_from, epochs, weight
     weight = calculate_new_weight(mae, weight, weight_adjustment)
     history[i] = mae
     i = i + 1
+  return history
+
+learning_rate = 0.1
+def gradient_descent(data_to_predict_to, data_to_predict_from, epochs, initial_theta):
+  theta_values = []
+  mse_values = []
+  history = dict()
+  theta = initial_theta
+  for i in range(epochs):
+    mse = calculate_mse(theta, data_to_predict_to, data_to_predict_from)
+    mse_values.append(mse)
+    theta_values.append(theta)
+    print(mse)
+    print(theta)
+    print('----')
+    history[i] = mse
+    derivative = calculate_derivative(theta, data_to_predict_to, data_to_predict_from)
+    plt.scatter(theta, mse)
+    plt.pause(0.5)
+    theta = theta - learning_rate * derivative
   
   return history
 
 # history = step_through_epochs(mpg, horsepower_matrix, 1000, .1, 1)
 # print(history)
+
+history = gradient_descent(mpg, horsepower_matrix, 100, 1)
+print(history)
 
 # STAGE SIX: Custom Adam optimizer with TF

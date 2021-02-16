@@ -7,10 +7,8 @@ import matplotlib.pyplot as plt
 # 1. Start with a random value of theta, say, 23
 # 2. Calculate the mean squared error for all values of x using theta
 # 3. Update theta to a new value. This is calculated via:
-# theta = theta - learning_rate * the derivative of the mean squared error
+# theta = theta - learning_rate * the derivative of the mean squared error in respect to theta
 # 4. Repeat until convergence
-
-# The derivative of the mean squared error is in respect to theta
 
 learning_rate = 0.1
 x = np.linspace(1, 200, 200)
