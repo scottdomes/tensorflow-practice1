@@ -113,7 +113,7 @@ horsepower_matrix = np.array(matrix_product)
 
 def plot_loss(results):
   plt.plot(results, label='loss')
-  plt.ylim([-100, 100]) 
+  plt.ylim([0, 25]) 
   plt.xlabel('Epoch')
   plt.ylabel('Error [MPG]')
   plt.legend()
@@ -148,34 +148,32 @@ history = horsepower_model.fit(
 
 # For more on this code, see simple_descent.py
 def calculate_mse(theta, data_to_predict_to, data_to_predict_from):
-  generator = [(data_to_predict_from[i] * theta - data_to_predict_to[i]) * (data_to_predict_from[i] * theta - data_to_predict_to[i]) for i in range(len(data_to_predict_from))]
+  generator = [(data_to_predict_from[i] * theta - data_to_predict_to[i])**2 for i in range(len(data_to_predict_from))]
   array = np.asarray(generator)
   return 1/len(data_to_predict_from) * sum(array)
 
-def calculate_derivative(theta, data_to_predict_to, data_to_predict_from):
-  generator = [data_to_predict_from[i] * theta - data_to_predict_to[i] for i in range(len(data_to_predict_from))]
-  array = np.asarray(generator)
-  return (2 * theta)/len(data_to_predict_from) * sum(array)
 
-learning_rate = 0.001
+def calculate_derivative(theta, data_to_predict_to, data_to_predict_from):
+  generator = [data_to_predict_from[i] * (data_to_predict_from[i] * theta - data_to_predict_to[i]) for i in range(len(data_to_predict_from))]
+  array = np.asarray(generator)
+  return 2/len(data_to_predict_from) * sum(array)
+
+learning_rate = .01
 def gradient_descent(data_to_predict_to, data_to_predict_from, epochs, initial_theta):
   theta_values = []
   mse_values = []
   theta = initial_theta
   for i in range(epochs):
     mse = calculate_mse(theta, data_to_predict_to, data_to_predict_from)
-    mse_values.append(mse)
+    mse_values.append(np.sqrt(mse)) # Taking square root for comparison
     theta_values.append(theta)
     derivative = calculate_derivative(theta, data_to_predict_to, data_to_predict_from)
     theta = theta - learning_rate * derivative
-  
+
   return mse_values
 
-# history = step_through_epochs(mpg, horsepower_matrix, 1000, .1, 1)
-# print(history)
-
 history = gradient_descent(mpg, horsepower_matrix, 100, 1)
-print(history)
+# print(history)
 plot_loss(history)
 
 # STAGE SIX: Custom Adam optimizer with TF
