@@ -152,13 +152,15 @@ def calculate_mse(theta, data_to_predict_to, data_to_predict_from):
   array = np.asarray(generator)
   return 1/len(data_to_predict_from) * sum(array)
 
-
 def calculate_derivative(theta, data_to_predict_to, data_to_predict_from):
   generator = [data_to_predict_from[i] * (data_to_predict_from[i] * theta - data_to_predict_to[i]) for i in range(len(data_to_predict_from))]
   array = np.asarray(generator)
   return 2/len(data_to_predict_from) * sum(array)
 
-learning_rate = .01
+learning_rate = .001
+
+# The below code takes about 70 epochs to stabilize around an error of 14.6 at .01 learning rate
+# If I use the same learning rate as the SimpleOptimizer, .001, it takes about 500 to reach that error 
 def gradient_descent(data_to_predict_to, data_to_predict_from, epochs, initial_theta):
   theta_values = []
   mse_values = []
@@ -172,7 +174,7 @@ def gradient_descent(data_to_predict_to, data_to_predict_from, epochs, initial_t
 
   return mse_values
 
-history = gradient_descent(mpg, horsepower_matrix, 100, 1)
+history = gradient_descent(mpg[:10], horsepower_matrix[:10], 500, 1)
 # print(history)
 plot_loss(history)
 
