@@ -25,13 +25,14 @@ mpg = np.array(test_dataset['MPG'])
 # Create normalizer
 horsepower_normalizer = preprocessing.Normalization()
 horsepower_normalizer.adapt(horsepower)
+initializer = tf.keras.initializers.GlorotUniform(seed=1)
 
 # STAGE TWO: Loss function + dummy optimizer + no plotting
 
 # The below code is the equivalent of...
 # horsepower_model = tf.keras.Sequential([
 #     horsepower_normalizer,
-#     layers.Dense(units=1, kernel_initializer=tf.keras.initializers.GlorotUniform(seed=1))
+#     layers.Dense(units=1, kernel_initializer=initializer)
 # ])
 # horsepower_model.compile(
 #     optimizer=DummyOptimizer(),
@@ -45,22 +46,19 @@ horsepower_normalizer.adapt(horsepower)
 # Which yields a mean absolute error of 26.834576
 
 # See horsepower.py for construction of this code
-initializer = tf.keras.initializers.GlorotUniform(seed=1)
 kernel = initializer(shape=(1, 1))
-input_value = horsepower[:10]
-input_value = tf.reshape(input_value, [10, 1])
-input_value = tf.cast(input_value, tf.float32)
 normalized_value = horsepower_normalizer(horsepower[:10])
 matrix_product = tf.tensordot(normalized_value, kernel, 1)
-# tf.print(matrix_product)
 
 horsepower_matrix = np.array(matrix_product)
+mpg_array = np.asarray(train_labels[:10])
 
 def calculate_mae(data):
   mae_results = []
 
   for index, horsepower_value in enumerate(data):
-    mpg_value = mpg[index]
+    mpg_value = mpg_array[index]
+    print(f"{mpg_value} {horsepower_value}")
     mae_results.append(np.abs(mpg_value - horsepower_value))	
 
   return np.mean(mae_results)
