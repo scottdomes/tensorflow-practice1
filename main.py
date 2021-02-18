@@ -241,8 +241,8 @@ def plot_loss(history):
 
 # Sets config for model training
 horsepower_model.compile(
-    optimizer=tf.optimizers.Adam(learning_rate=0.1),
-    # optimizer=DummyOptimizer(),
+    # optimizer=tf.optimizers.Adam(learning_rate=0.1),
+    optimizer=DummyOptimizer(),
     loss='mean_absolute_error') #   `loss = mean(abs(y_true - y_pred), axis=-1)`
 
 
